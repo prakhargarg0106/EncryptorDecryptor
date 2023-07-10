@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import streamlit as st
 import pandas as pd
 from io import StringIO
@@ -43,26 +45,46 @@ st.markdown("""
  * save the file on your systeem
 """)
 
+uploaded_file = None
+input_text = None
+# #Filter to choose Encryption or Decryption
+# if 'key' not in st.session_state:
+#     st.session_state.key = ''
 
-#Filter to choose Encryption or Decryption
-if 'key' not in st.session_state:
-    st.session_state.key = ''
+
+
+#text = st.empty()
 
 def submit():
-    #st.session_state.key = ''
-    None
+    print(" i m in submit form")
+  
 
+def clear_key():
+       #st.session_state["aeskey"] = ""
+       None
+    
 def clear_form():
-   #st.session_state['key'] = ""
    print(" i m in clearing form")
-   st.session_state.key = ''
+   st.session_state["aeskey"] = ""
    
 filter = st.selectbox ('Select Encryption or Decryption', 
-                           ['Encryption','Decryption'], on_change=clear_form)
+                           ['Encryption of a file','Decryption of a file'
+                            ,'Encryption of a text','Decryption of a text'], 
+                           on_change=clear_form)
 
-uploaded_file = st.file_uploader("Select a file", type= ['txt', 'csv'])
-#agree = st.checkbox('Show content of input file ?')
-#key = st.text_input("Input AES Key", "", max_chars = 16,  on_change=submit)
+
+if filter == 'Encryption of a file':
+    uploaded_file = st.file_uploader("Select a file to encrypt", type= ['txt', 'csv'])
+elif filter == 'Decryption of a file':
+    uploaded_file = st.file_uploader("Select a file to decrypt", type= ['txt', 'csv'])
+elif filter == 'Encryption of a text':
+    input_text = st.text_input("Input text for encryption", "")
+else:
+    input_text = st.text_input("Input text for decryption", "")
+
+key = st.text_input("Input AES Key", "", max_chars = 16,  on_change=submit,
+                     type ='password', key="aeskey")
+
 
 if uploaded_file is not None:
     # To read file as bytes:
@@ -71,19 +93,26 @@ if uploaded_file is not None:
     stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
     # To read file as string:
     string_data = stringio.read()
-    agree = st.checkbox('Show content of input file ?')
-    key = st.text_input("Input AES Key", "", max_chars = 16,  on_change=submit,
-                        type ='password')
-    if agree == True:
-        st.write('Content of a file')
+    inputagree = st.checkbox('Show content of input file ?')
+    # key = st.text_input("Input AES Key", "", max_chars = 16,  on_change=submit,
+    #                     type ='password')
+    if inputagree == True:
+        st.write('Content of a Input file')
         st.write(string_data)
     
     
     if key and key != '':
-        hs = hashlib.sha256(st.session_state['key'].encode('utf-8')).hexdigest()
+        hs = hashlib.sha256(key.encode('utf-8')).hexdigest()
         shared_secret_key = bytes.fromhex(hs)
-        if filter == 'Encryption' :
+        if filter == 'Encryption of a file' :
             encrypted_data = encrypt_message(string_data, shared_secret_key).hex()
+            outputagree = st.checkbox('Show content of output file ?')
+            # key = st.text_input("Input AES Key", "", max_chars = 16,  on_change=submit,
+            #                     type ='password')
+            if outputagree == True:
+                st.write('Content of a Output file')
+                st.write(encrypted_data)
+            
             st.download_button(
                 label="Download Encrypted Data as a text file",
                 data= encrypted_data,
@@ -94,6 +123,13 @@ if uploaded_file is not None:
             try:
                 ciphertext = bytes.fromhex(string_data)
                 decrypted_data = decrypt_message(ciphertext, shared_secret_key)
+                outputagree = st.checkbox('Show content of output file ?')
+                # key = st.text_input("Input AES Key", "", max_chars = 16,  on_change=submit,
+                #                     type ='password')
+                if outputagree == True:
+                    st.write('Content of a Output file')
+                    st.write(decrypted_data)
+                    
                 st.download_button(
                     label="Download decrypted Data as a text file",
                     data= decrypted_data,
@@ -102,4 +138,21 @@ if uploaded_file is not None:
                 )
             except:
               st.error("Invalid key or encrypted file")
-       
+elif input_text is not None and input_text != '':
+    #print("key : " + key)
+    if key and key != '':
+        hs = hashlib.sha256(key.encode('utf-8')).hexdigest()
+        shared_secret_key = bytes.fromhex(hs)
+        if filter == 'Encryption of a text' :
+            encrypted_data = encrypt_message(input_text, shared_secret_key).hex()
+            st.write(encrypted_data)
+            #clear_key()
+        else :
+            try:
+                ciphertext = bytes.fromhex(input_text)
+                decrypted_data = decrypt_message(ciphertext, shared_secret_key)
+                st.write(decrypted_data)
+            except:
+              st.error("Invalid key or encrypted file")
+            # finally :
+            #     clear_key()
