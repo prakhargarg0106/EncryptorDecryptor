@@ -1,0 +1,4 @@
+pandas==1.5.3
+streamlit==1.16.0
+cryptography
+hashlib
