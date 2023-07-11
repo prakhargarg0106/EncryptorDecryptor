@@ -38,11 +38,11 @@ st.set_page_config(
 st.title('Showcasing Encryption and Decryption using AES ')
 
 st.markdown("""
- *Select Encryption/Decryption from Dropbox
- *Select a file from the system to be encrypted or decrypted
- *Enter the Key to encrypt or decrypt data ( use the same key for decryption)
- *Press Enter key to do the action
- *Save the file on your system ( if you are processing a file)
+ * Select Encryption/Decryption from Dropbox
+ * Select a file from the system to be encrypted or decrypted
+ * Enter the Key to encrypt or decrypt data ( use the same key for decryption)
+ * Press Enter key to do the action
+ * Save the file on your system ( if you are processing a file)
 """)
 
 uploaded_file = None
