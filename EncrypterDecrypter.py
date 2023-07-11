@@ -42,7 +42,7 @@ st.markdown("""
  *Select a file from the system to be encrypted or decrypted
  *Enter the Key to encrypt or decrypt data ( use the same key for decryption)
  *Press Enter key to do the action
-Save the file on your system ( if you are processing a file)
+ *Save the file on your system ( if you are processing a file)
 """)
 
 uploaded_file = None
