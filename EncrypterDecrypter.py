@@ -38,11 +38,11 @@ st.set_page_config(
 st.title('Showcasing Encryption and Decryption using AES ')
 
 st.markdown("""
- * Select Encryption/Decryption from dropbox
- * Select file from system to be encrypted or decryppted
- * Enter Key to encrypt or decrypt data ( use same key for decryption)
- * press Enter key to do the action
- * save the file on your systeem
+ *Select Encryption/Decryption from Dropbox
+ *Select a file from the system to be encrypted or decrypted
+ *Enter the Key to encrypt or decrypt data ( use the same key for decryption)
+ *Press Enter key to do the action
+Save the file on your system ( if you are processing a file)
 """)
 
 uploaded_file = None
@@ -137,7 +137,7 @@ if uploaded_file is not None:
                     mime='text',
                 )
             except:
-              st.error("Invalid key or encrypted file")
+              st.error("Invalid key or a file")
 elif input_text is not None and input_text != '':
     #print("key : " + key)
     if key and key != '':
@@ -153,6 +153,6 @@ elif input_text is not None and input_text != '':
                 decrypted_data = decrypt_message(ciphertext, shared_secret_key)
                 st.write(decrypted_data)
             except:
-              st.error("Invalid key or encrypted file")
+              st.error("Invalid key or a file")
             # finally :
             #     clear_key()
